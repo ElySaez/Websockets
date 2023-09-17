@@ -1,0 +1,58 @@
+[
+	{
+		"title": "Agua",
+		"description": "Sin gas",
+		"categoria": "Bebida",
+		"price": "1000",
+		"stock": "80",
+		"id": 1
+	},
+	{
+		"title": "Jabón",
+		"description": "cara",
+		"categoria": "Cuidado personal",
+		"price": "500",
+		"stock": "60",
+		"id": 2
+	},
+	{
+		"title": "Shampoo",
+		"description": "niños",
+		"categoria": "Cuidado personal",
+		"price": "3000",
+		"stock": "5",
+		"id": 3
+	},
+	{
+		"title": "ventilador",
+		"description": "metalico",
+		"categoria": "Deco hogar",
+		"price": "50000",
+		"stock": "30",
+		"id": 3
+	},
+	{
+		"title": "Silla",
+		"description": "Madera",
+		"categoria": "Hogar",
+		"price": "50000",
+		"stock": "24",
+		"id": 4
+	},
+	{
+		"title": "Cama",
+		"description": "2 plazas",
+		"categoria": "Hogar",
+		"price": "120000",
+		"stock": "23",
+		"id": 5
+	},
+	{
+		"title": "Celular",
+		"description": "Iphone",
+		"categoria": "Electronica",
+		"price": "1000000",
+		"stock": "42",
+		"id": 6
+	}
+]
