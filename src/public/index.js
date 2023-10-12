@@ -16,7 +16,6 @@ function postProduct()  {
 }
 
 function deleteProd(id) {
-  console.log(id)
   socket.emit("deleteProd", id)
 }
 

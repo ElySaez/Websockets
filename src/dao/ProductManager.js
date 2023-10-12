@@ -1,5 +1,4 @@
 import { ProductModel } from './models/ProductsModel.js'
-import { ObjectId } from 'mongodb';
 
 export default class ProductManager {
 
@@ -7,10 +6,15 @@ export default class ProductManager {
         this.model = ProductModel;
     }
 
-
-    getProducts() {
+    getProducts(query, limit, page, sort) {
         try {
-            return this.model.find({}).exec();
+            let src = query ? { title: { $regex: query, '$options' : 'i' }  } : null;
+
+            if ((limit === 0 || !limit)) {
+                return this.model.paginate( src, { paginate: false, page: page, sort: { price: sort } })
+            } else {
+                return this.model.paginate( src, { limit: limit, page: page, sort: { price: sort } })
+            }
         } catch (error) {
             console.log("ProductManager:getProducts() error: ", error)
         }
@@ -25,13 +29,7 @@ export default class ProductManager {
     }
 
     deleteProduct(uid) {
-        console.log(uid)
         try {
-            const filter = {
-                '_id': new ObjectId(uid)
-            };
-
-            console.log(filter)
             return this.model.deleteOne({ _id: uid })
         } catch (error) {
             console.log("ProductManager:deleteUser() error: ", error)

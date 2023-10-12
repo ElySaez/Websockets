@@ -1,98 +1,90 @@
-<div>
-  <h1>Real Time Products</h1>
+<div class="container">
+  <div>
 
-  <form>
-    Title <input id="title" type="text" name="title" required></input>
-    Description <input id="description" type="text" name="description" required></input>
-    Category <input id="category" type="text" name="category" required></input>
-    Price <input id="price" type="text" name="price" required></input>
-    Stock <input id="stock" type="text" name="stock" required></input>
-  </form>
+    <div class="mb-3 mt-3">
+      <h1>Real Time Products</h1>
+    </div>
 
-  <button id="send" onclick="newProd()">Enviar</button>
+    <form id="formProd" class="row g-3 mb-3">
+      <div class="mb-3 col-auto">
+        <label for="title" class="form-label">Title</label>
+        <input class="form-control" id="title" type="text" name="title" required></input>
+      </div>
+
+      <div class="mb-3 col-auto">
+        <label for="description" class="form-label">Description</label>
+        <input class="form-control" id="description" type="text" name="description" required></input>
+      </div>
+
+      <div class="mb-3 col-auto">
+        <label for="category" class="form-label">Category</label>
+        <input class="form-control" id="category" type="text" name="category" required></input>
+      </div>
+
+      <div class="mb-3 col-auto">
+        <label for="price" class="form-label">Price</label>
+        <input class="form-control" id="price" type="text" name="price" required></input>
+      </div>
+
+      <div class="mb-3 col-auto">
+        <label for="stock" class="form-label">Stock</label>
+        <input class="form-control" id="stock" type="text" name="stock" required></input>
+      </div>
+
+      <div class="input-group">
+        <button id="newProd" class="btn btn-success">Crear</button>
+      </div>
+
+    </form>
+
+    <div class="mb-3">
+      <h2>Productos</h2>
+    </div>
+
+    <div>
+      <form class="mb-3">
+        <div class="row g-3 align-items-center">
+          <div class="col-auto">
+            <label for="nameSrc" class="form-label">Busqueda por Nombre</label>
+          </div>
+          <div class="col-auto">
+            <input class="form-control" id="bsq" type="text" name="title" required></input>
+          </div>
+          <div class="col-auto">
+            <select id="orderSel" class="form-select">
+              <option value="desc">Precio: mayor a menor</option>
+              <option value="asc">Precio: menor a mayor</option>
+            </select>
+          </div>
+          <div class="col-auto">
+            <button id="filterBtn" class="btn btn-info">Filtrar</button>
+          </div>
+        </div>
+      </form>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <td>Nombre</td>
+            <td>Descripcion</td>
+            <td>Categoria</td>
+            <td>Precio</td>
+            <td>Stock</td>
+          </tr>
+        </thead>
+
+        <tbody id="record">
+        </tbody>
+      </table>
+
+      <nav>
+        <ul id="pagination" class="pagination"></ul>
+      </nav>
+    </div>
 
 
-  <h2>Historial</h2>
-  <table>
-    <thead>
-      <tr>
-        <td>Nombre</td>
-        <td>Descripcion</td>
-        <td>Categoria</td>
-        <td>Precio</td>
-        <td>Stock</td>
-      </tr>
-    </thead>
-
-    <tbody id="record">
-    </tbody>
-  </table>
-
+  </div>
 </div>
 
-<script>
-  load()
 
-  async function load() {
-    const response = await fetch(
-      'http://localhost:8080/products/all', {
-      method: 'GET',
-      headers: { "Content-Type": "application/json" }
-    })
-      .then(response => {
-        return response.json()
-      })
-      .then(data => {
-        let historial = document.getElementById("record");
-        historial.innerHTML = "";
-
-        data.payload.map(element => {
-          historial.innerHTML += `
-                  <tr>
-                  <td> ${element.title} </td>
-                  <td>${element.description}</td>
-                  <td>${element.category}</td>
-                  <td>$ ${element.price}</td>
-                  <td>${element.stock} </td>
-                  <td><button onclick="deleteProd(\'${element.id}\')">Eliminar</button></td>
-                  </tr>
-                  
-  `
-        })
-      });
-
-  }
-
-
-  async function newProd() {
-    let product = {
-      "title": document.getElementById("title").value,
-      "description": document.getElementById("description").value,
-      "category": document.getElementById("category").value,
-      "price": document.getElementById("price").value,
-      "stock": document.getElementById("stock").value,
-    }
-
-    const response = await fetch(
-      'http://localhost:8080/products/new', {
-      method: 'POST',
-      body: JSON.stringify(product),
-      headers: { "Content-Type": "application/json" }
-    }
-    )
-      .then(data => load());
-  }
-
-
-
-  async function deleteProd(id) {
-    const response = fetch(
-      'http://localhost:8080/products/' + id, {
-      method: 'DELETE',
-      headers: { "Content-Type": "application/json" }
-    })
-      .then(data => load());
-  }
-
-
-</script>
+<script src="/products.js"></script>

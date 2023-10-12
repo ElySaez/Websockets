@@ -1,8 +1,11 @@
 import express from "express"
 import handlebars from 'express-handlebars'
+import Handlebars from 'handlebars'
+import { allowInsecurePrototypeAccess } from '@handlebars/allow-prototype-access'
 
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
+import path from 'path'
 
 import { connectDb } from './src/config/connectDb.js'
 import { routerApp } from './src/routes/index.js'
@@ -20,10 +23,13 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.engine('hbs', handlebars.engine({
-  extname: '.hbs'
+  extname: 'hbs',
+  defaultLayout: 'main',
+  handlebars: allowInsecurePrototypeAccess(Handlebars)
 }))
 app.set('view engine', 'hbs')
 app.set('views', __dirname + '/src/views/')
+app.use(express.static(path.join(__dirname, '/src/public')));
 
 app.use(routerApp)
 

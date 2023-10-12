@@ -12,24 +12,29 @@ router.get('/', async (req, res) => {
 router.get('/all', async (req, res) => {
 
   try {
-    let prods = []
-    const response = await productManager.getProducts();
 
-    response.forEach(e => {
-      let item = {
-        "id": e._id,
-        "title": e.title,
-        "description": e.description,
-        "category": e.category,
-        "price": e.price,
-        "stock": e.stock
-      }
-      prods.push(item);
-    })
+    let query = req.query.query === "undefined" || null ? '' : req.query.query;
+    let limit = req.query.limit === "undefined" || null ? 10 : req.query.limit;
+    let qpage = req.query.page === "undefined" || null ? 1 : req.query.page;
+    let sort = req.query.sort === "undefined" || null ? 'desc' : req.query.sort;
+
+    let {
+      docs,
+      hasPrevPage,
+      hasNextPage,
+      prevPage,
+      nextPage,
+      page
+    } = await productManager.getProducts(query, limit, qpage, sort);
 
     res.send({
       status: true,
-      payload: prods
+      payload: docs,
+      hasPrevPage,
+      hasNextPage,
+      prevPage,
+      nextPage,
+      page
     })
   } catch (error) {
     console.log(error)
@@ -55,7 +60,6 @@ router.post('/new', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     let { id } = req.params;
-    console.log(id)
     let result = await productManager.deleteProduct(id)
     res.send({
       status: true,
