@@ -33,19 +33,23 @@ async function getProducts(query, limit, page, sort) {
                 <td>${element.category}</td>
                 <td>$ ${element.price}</td>
                 <td>${element.stock} </td>
-                <td><button class="btn btn-danger" onclick="deleteProd(\'${element._id}\')">Eliminar</button></td>
+                <td>
+                    <button class="btn btn-danger" onclick="deleteProd(\'${element._id}\')">Eliminar</button>
+                    <input type="number" name="" id="prodCant-${element._id}" value="1">
+                    <button title="Agregar al carrito" class="btn btn-primary" onclick="addToCart(\'${element._id}\')">Agregar</button>
+                </td>
                 </tr>`
             });
 
             let pagDiv = document.getElementById("pagination");
             pagDiv.innerHTML = "";
 
-            let prevPage = data.hasPrevPage ? '<li class="page-item"><a class="page-link" onclick=" getProducts(null,null,' + data.prevPage + ',`'+sort+'`) ">Previous</a></li>' :
+            let prevPage = data.hasPrevPage ? '<li class="page-item"><a class="page-link" onclick=" getProducts(null,null,' + data.prevPage + ',`' + sort + '`) ">Previous</a></li>' :
                 '<li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>';
 
             let currentPage = '<li class="page-item"><a class="page-link" href="#">' + data.page + '</a></li>';
 
-            let nextPage = data.hasNextPage ? '<li class="page-item"><a class="page-link" onclick=" getProducts(null,null,'+ data.nextPage + ',`'+sort+'`) " href="#">Next</a></li>' :
+            let nextPage = data.hasNextPage ? '<li class="page-item"><a class="page-link" onclick=" getProducts(null,null,' + data.nextPage + ',`' + sort + '`) " href="#">Next</a></li>' :
                 '<li class="page-item disabled"><a class="page-link" >Next</a></li>';
 
             pagDiv.innerHTML += prevPage + currentPage + nextPage;
@@ -81,7 +85,7 @@ async function deleteProd(id) {
         'http://localhost:8080/products/' + id, {
         method: 'DELETE',
         headers: { "Content-Type": "application/json" }
-    }).then(data =>getProducts(null, null, null, selectOrder));
+    }).then(data => getProducts(null, null, null, selectOrder));
 }
 
 document.getElementById("filterBtn").addEventListener("click", async function (e) {
@@ -90,3 +94,44 @@ document.getElementById("filterBtn").addEventListener("click", async function (e
     let sort = document.getElementById("orderSel").value
     getProducts(query, null, null, sort)
 })
+
+
+async function addToCart(pid) {
+    let cat = document.getElementById("prodCant-" + pid).value
+
+    let body = {
+        "pid": pid,
+        "quantity": cat
+    }
+
+    await fetch(
+        'http://localhost:8080/cart/', {
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: { "Content-Type": "application/json" }
+    }).then(response => {
+        return response.json()
+    }).then(data => {
+        let cartBody = document.getElementById("cart-body");
+        cartBody.innerHTML = "";
+
+        const cid = data.cart._id;
+        const prods = data.cart.products;
+
+        console.log(data)
+
+        prods.map(element => {
+            cartBody.innerHTML +=
+                `<tr>
+            <td>${element.product.title}</td>
+            <td>${element.product.price}</td>
+            <td>${element.quantity}</td>
+            <td>
+                <button class="btn btn-danger" >Eliminar</button>
+                <input type="number" name="" id="" value="1">
+                <button title="Agregar al carrito" class="btn btn-primary">Agregar</button>
+            </td>
+            </tr>`
+        });
+    })
+}

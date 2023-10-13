@@ -10,9 +10,8 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/all', async (req, res) => {
-
   try {
-
+    // Se valida los paramtros del paginador, sino llegaran a existir se definen unos por defecto
     let query = req.query.query === "undefined" || null ? '' : req.query.query;
     let limit = req.query.limit === "undefined" || null ? 10 : req.query.limit;
     let qpage = req.query.page === "undefined" || null ? 1 : req.query.page;

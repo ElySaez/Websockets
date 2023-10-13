@@ -7,7 +7,7 @@ const productsSchema = new Schema({
     category: { type: String, max: 30, required: true },
     price: { type: Number, required: true },
     stock: { type: Number, required: true }
-});
+}, {versionKey: false});
 
 productsSchema.plugin(mongoosePaginate)
 

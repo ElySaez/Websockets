@@ -1,6 +1,41 @@
 <div class="container">
   <div>
 
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      Carrito de compra
+    </button>
+
+    <div class="modal" id="myModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Modal title</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <table>
+              <thead>
+                <tr>
+                  <td>Nombre</td>
+                  <td>Precio</td>
+                  <td>Cantidad</td>
+                  <td>Acciones</td>
+                </tr>
+              </thead>
+              <tbody id="cart-body">
+              </tbody>
+            </table>
+            {{!-- contendido del carrito --}}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="mb-3 mt-3">
       <h1>Real Time Products</h1>
     </div>
@@ -70,6 +105,7 @@
             <td>Categoria</td>
             <td>Precio</td>
             <td>Stock</td>
+            <td>Acciones</td>
           </tr>
         </thead>
 
