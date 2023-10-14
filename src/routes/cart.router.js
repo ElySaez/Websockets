@@ -125,9 +125,16 @@ router.delete('/:cid/products', async (req, res) => {
 })
 
 
-router.put('/:cid/products/:pid', () => {
-    const cart = cartManager.updateQuantity()
-    res.send({ 'cart': cart })
+router.put('/:cid/products/:pid', async (req, res) => {
+    try {
+        let { cid, pid } = req.params;
+        const quantity = req.body
+        const cart = await cartManager.updateQuantity(cid, pid, quantity.quantity)
+        res.send({ 'cart': cart })
+    } catch (error) {
+        console.log(error)
+    }
+   
 })
 
 
