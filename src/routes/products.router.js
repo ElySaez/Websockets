@@ -56,10 +56,10 @@ router.post('/new', async (req, res) => {
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:pid', async (req, res) => {
   try {
-    let { id } = req.params;
-    let result = await productManager.deleteProduct(id)
+    let {pid} = req.params;
+    let result = await productManager.deleteProduct(pid)
     res.send({
       status: true,
       payload: result

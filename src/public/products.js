@@ -1,4 +1,5 @@
 //carga la lista de productos
+checkCart()
 
 let selectOrder = document.getElementById("orderSel").value
 getProducts(null, null, null, selectOrder)
@@ -76,13 +77,13 @@ document.getElementById("newProd").addEventListener("click", async function (e) 
         headers: { "Content-Type": "application/json" }
     }).then(data => {
         document.getElementById("formProd").reset();
-        getProducts();
+        getProducts(null, null, null, selectOrder);
     });
 });
 
-async function deleteProd(id) {
+async function deleteProd(pid) {
     await fetch(
-        'http://localhost:8080/products/' + id, {
+        'http://localhost:8080/products/' + pid, {
         method: 'DELETE',
         headers: { "Content-Type": "application/json" }
     }).then(data => getProducts(null, null, null, selectOrder));
@@ -95,6 +96,59 @@ document.getElementById("filterBtn").addEventListener("click", async function (e
     getProducts(query, null, null, sort)
 })
 
+
+
+// Cart acctions
+async function checkCart(){
+    await fetch(
+        'http://localhost:8080/cart/checkCart', {
+        method: 'GET',
+        headers: { "Content-Type": "application/json" }
+    }).then(response => {
+        return response.json()
+    }).then(data => {
+        if(data.cart != null){
+            const cid = data.cart._id;
+            if(cid != null){
+                document.getElementById("cid").value = cid;
+            } else {
+                document.getElementById("cid").value = null;
+            }
+        }
+    })
+}
+
+async function getCart(cid) {
+    await fetch(
+        'http://localhost:8080/cart/' + cid, {
+        method: 'GET',
+        headers: { "Content-Type": "application/json" }
+    }).then(response => {
+        return response.json()
+    }).then(data => {
+        let cartBody = document.getElementById("cart-body");
+        cartBody.innerHTML = "";
+
+        const cid = data.cart._id;
+        const prods = data.cart.products;
+
+        prods.map(element => {
+            cartBody.innerHTML +=
+                `<tr>
+            <td>${element.product.title}</td>
+            <td>${element.product.price}</td>
+            <td>${element.quantity}</td>
+            <td>
+                <button class="btn btn-danger" onclick="delProdOnCart('`+ cid + `', \'${element._id}\')" >Eliminar</button>
+                <input type="number" name="" id="" value="1">
+                <button title="Agregar al carrito" class="btn btn-primary">Agregar</button>
+            </td>
+            </tr>`
+        });
+
+        document.getElementById("clrCartBt").disabled = false;
+    });
+}
 
 async function addToCart(pid) {
     let cat = document.getElementById("prodCant-" + pid).value
@@ -116,9 +170,9 @@ async function addToCart(pid) {
         cartBody.innerHTML = "";
 
         const cid = data.cart._id;
-        const prods = data.cart.products;
+        document.getElementById("cid").value = cid;
 
-        console.log(data)
+        const prods = data.cart.products;
 
         prods.map(element => {
             cartBody.innerHTML +=
@@ -127,7 +181,7 @@ async function addToCart(pid) {
             <td>${element.product.price}</td>
             <td>${element.quantity}</td>
             <td>
-                <button class="btn btn-danger" >Eliminar</button>
+                <button class="btn btn-danger" onclick="delProdOnCart('`+ cid + `', \'${element._id}\')" >Eliminar</button>
                 <input type="number" name="" id="" value="1">
                 <button title="Agregar al carrito" class="btn btn-primary">Agregar</button>
             </td>
@@ -135,3 +189,59 @@ async function addToCart(pid) {
         });
     })
 }
+
+async function delProdOnCart(cid, pid) {
+    await fetch(
+        'http://localhost:8080/cart/' + cid + '/products/' + pid, {
+        method: 'DELETE',
+        headers: { "Content-Type": "application/json" }
+    }).then(response => {
+        return response.json()
+    }).then(data => {
+        let cartBody = document.getElementById("cart-body");
+        cartBody.innerHTML = "";
+
+        const cid = data.cart._id;
+        const prods = data.cart.products;
+
+        prods.map(element => {
+            cartBody.innerHTML +=
+                `<tr>
+            <td>${element.product.title}</td>
+            <td>${element.product.price}</td>
+            <td>${element.quantity}</td>
+            <td>
+                <button class="btn btn-danger" onclick="rc('`+ cid + `', \'${element._id}\')" >Eliminar</button>
+                <input type="number" name="" id="" value="1">
+                <button title="Agregar al carrito" class="btn btn-primary">Agregar</button>
+            </td>
+            </tr>`
+        });
+    })
+}
+
+async function delAllProdOnCart() {
+    const cid = document.getElementById("cid").value;
+
+    if(cid !== ''){
+        await fetch(
+            'http://localhost:8080/cart/'+cid+'/products/', {
+            method: 'DELETE',
+            headers: { "Content-Type": "application/json" }
+        }).then(response => {
+            return response.json()
+        }).then(data => {
+            let cartBody = document.getElementById("cart-body");
+            cartBody.innerHTML = "";
+            document.getElementById("clrCartBt").disabled = true;
+        })
+    }
+
+}
+
+document.getElementById('cart-modal').addEventListener('shown.bs.modal', () => {
+    const cid = document.getElementById("cid").value
+    if(cid != ''){
+        getCart(cid)
+    }
+})

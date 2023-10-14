@@ -14,18 +14,18 @@ export default class CartManager {
         }
     }
 
-    getCartById(id) {
-        return this.model.findById(id).populate('products.product')
+    async getCartById(id) {
+        return await this.model.findById(id).populate('products.product')
     }
 
 
-    createCart(cart) {
-        return this.model.create(cart)
+    async createCart(cart) {
+        return await this.model.create(cart)
     }
 
-    updateCart(cid, product) {
+    async updateCart(cid, product) {
         try {
-            return this.model.findByIdAndUpdate({ _id: cid },
+            return await this.model.findByIdAndUpdate({ _id: cid },
                 { $push: { products: product } },
                 { new: true, useFindAndModify: false }).populate('products.product')
 
@@ -49,14 +49,25 @@ export default class CartManager {
         }
     }
 
-    deleteProductFromCart(cid, pid) {
-        return this.model.findByIdAndUpdate({ _id: cid },
-            { $pull: { products: { _id: pid } } },
-            { new: true, useFindAndModify: false })
+    async deleteProductFromCart(cid, pid) {
+        console.log('deleteProductFromCart', cid, pid)
+        try {
+            return await this.model.findByIdAndUpdate({ _id: cid },
+                { $pull: { products: { _id: pid } } },
+                { new: true, useFindAndModify: false }).populate('products.product')
+        } catch (error) {
+            console.log(error)
+        }
+
     }
 
     async emptyCart(cid) {
-        return await this.model.findByIdAndUpdate({ _id: cid },
-            { $set: { products: [] } })
+        try {
+            return await this.model.findByIdAndUpdate({ _id: cid },
+                { $set: { products: [] } })
+        } catch (error) {
+            console.log(error)
+        }
+
     }
 }

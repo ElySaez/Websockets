@@ -28,24 +28,20 @@ export default class ProductManager {
         }
     }
 
-    deleteProduct(uid) {
+    deleteProduct(pid) {
         try {
-            return this.model.deleteOne({ _id: uid })
+            return this.model.deleteOne({ _id: pid })
         } catch (error) {
             console.log("ProductManager:deleteUser() error: ", error)
         }
     }
 
-    getProductById(uid) {
+    getProductById(pid) {
         try {
-            return this.model.findOne({ _id: uid })
+            return this.model.findOne({ _id: pid })
         } catch (error) {
             console.log("ProductManager:getProductById() error: ", error)
         }
-    }
-
-    updateUser() {
-
     }
 
 
