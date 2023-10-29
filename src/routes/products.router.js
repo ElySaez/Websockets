@@ -1,5 +1,7 @@
 import { Router } from 'express'
 import ProductManager from '../dao/ProductManager.js'
+import { authe } from '../middleware/autentication.js'
+
 
 const router = Router()
 const productManager = new ProductManager()
@@ -9,9 +11,9 @@ router.get('/', async (req, res) => {
   res.render('products')
 })
 
-router.get('/all', async (req, res) => {
+router.get('/all',authe, async (req, res) => {
   try {
-    // Se valida los paramtros del paginador, sino llegaran a existir se definen unos por defecto
+    // Se valida los parametros del paginador, sino llegaran a existir se definen unos por defecto
     let query = req.query.query === "undefined" || null ? '' : req.query.query;
     let limit = req.query.limit === "undefined" || null ? 10 : req.query.limit;
     let qpage = req.query.page === "undefined" || null ? 1 : req.query.page;
